@@ -46,6 +46,7 @@ public static class TouchAreaS
 
     public static void Initialize()
     {
+        Input.simulateMouseWithTouches = false;
         m_touches = new DynamicArray<TLTouch>(10);
         m_touchRemoveList = new List<TLTouch>();
         m_areas = new DynamicArray<TouchAreaC>();
@@ -380,7 +381,9 @@ public static class TouchAreaS
         }
 
         // 2. Mouse Emulation (Unity Editor / PC / Mac)
-        if (Input.GetMouseButtonDown(0))
+        bool mouseAllowed = realTouchCount == 0;
+
+        if (mouseAllowed && Input.GetMouseButtonDown(0))
         {
             m_mouseActive = true;
             CustomTouch ct = default(CustomTouch);
