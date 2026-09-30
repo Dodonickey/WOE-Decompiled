@@ -767,8 +767,8 @@ public class AutoGeometryLayer
 				num2 = -1;
 				for (int k = 0; k < _tile.edgeVerts.Length; k++)
 				{
-					if ((int)_tile.edgeVerts[k].polyline > 0 && !_tile.edgeVerts[k].wasTravelled)
-					{
+                    if (_tile.edgeVerts[k].polyline != (IntPtr)0 && !_tile.edgeVerts[k].wasTravelled)
+                    {
 						num2 = k;
 						break;
 					}
