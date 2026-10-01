@@ -4,7 +4,7 @@ using UnityEngine;
 
 internal static class ChipmunkProWrapper
 {
-#if UNITY_IOS || UNITY_IPHONE || UNITY_STANDALONE_OSX
+#if UNITY_IPHONE || UNITY_STANDALONE_OSX
     private const string lookFrom = "__Internal";
 #else
     private const string lookFrom = "chipmunk";

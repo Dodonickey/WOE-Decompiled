@@ -1,4 +1,4 @@
-﻿#if !UNITY_IPHONE && !UNITY_IOS && !UNITY_EDITOR
+﻿#if !UNITY_IPHONE && !UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;

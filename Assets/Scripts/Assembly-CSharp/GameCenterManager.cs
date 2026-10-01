@@ -23,7 +23,7 @@ public static class GameCenterManager
 
     public static void Login(Action _GCLoginComplete)
     {
-#if UNITY_IOS || UNITY_EDITOR
+#if UNITY_IPHONE || UNITY_EDITOR
         Social.localUser.Authenticate(delegate (bool success)
         {
             if (success)
