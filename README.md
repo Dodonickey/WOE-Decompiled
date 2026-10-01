@@ -11,6 +11,7 @@ The decompiled build in this repo is from a **2014 iOS TestFlight build** of the
 # ⚠️ Important Information Before You Start
 
 * This game originally used **Unity 4.3.2f1**, but has been updated to **Unity 4.7.2f1** (the closest version I already had).
+* This project has been updated to Unity 2018.4.8f1 for stability and better support for platforms. [Click this to go to the newer source](https://github.com/Dodonickey/WOE-Decompiled/tree/WOE-0.4.0-Unity2018)
 * Currently, you can only build for **Windows** because of required plugins.
 * Android support is buggy on newer Android versions; **Android 4.4 seems to be the most stable** for Android builds.
 * Some enhancements have already been made to this source, including:
