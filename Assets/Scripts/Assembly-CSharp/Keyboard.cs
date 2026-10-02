@@ -11,8 +11,11 @@ public class Keyboard
 
     private const float NativeGraceSeconds = 0.3f;
 
-#if KEYBOARD_NATIVE
+    // Always declared (even where unused) so the editor and the player
+    // have identical field layouts and Unity's serializer doesn't complain.
     public TouchScreenKeyboard m_touchKeyboard;
+
+#if KEYBOARD_NATIVE
     private float m_openTime;
 #endif
 
