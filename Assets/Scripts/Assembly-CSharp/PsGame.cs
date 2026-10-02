@@ -73,7 +73,11 @@ public class PsGame : IGame
 		Application.targetFrameRate = 60;
 		m_projectCode = _projectCode;
 		m_projectVersion = _projectVersion;
-		Debug.Initialize(true, true, true, true);
+#if !UNITY_EDITOR && !DEVELOPMENT_BUILD
+		Debug.Initialize(false, false, false, false);
+#else
+        Debug.Initialize(true, true, true, true);
+#endif
 		ResourceManager.GenerateResourceGroupFromFolder("Framework");
 		ResourceManager.GenerateResourceGroupFromFolder("PlaySomething/Autogeometry");
 		ResourceManager.GenerateResourceGroupFromFolder("PlaySomething/Ground");

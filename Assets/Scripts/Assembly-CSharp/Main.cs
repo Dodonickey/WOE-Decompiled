@@ -21,9 +21,6 @@ public class Main : MonoBehaviour
 	{
         //Extras had to be added to fix some issues specifically with the standalone windows builds.
         #region Extras
-#if !UNITY_EDITOR && !DEVELOPMENT_BUILD
-        UnityEngine.Debug.logger.logEnabled = false;
-#endif
         Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;//For languages that use a , as a decimal seperator.
         ZipConstants.DefaultCodePage = 65001; //weird error
         IpConfig.Load();//Added in order to make chaning server url 10x easier since this game is basically dead and youll likely be using a custom server.
