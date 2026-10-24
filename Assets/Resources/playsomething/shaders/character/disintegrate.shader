@@ -478,7 +478,13 @@ Shader "Character/Disintegrate Diffuse"
                 fixed4 noise = tex2D(_NoiseTex, i.uv * _TileFactor);
                 clip(noise.r - _DisintegrateAmount);
 
+                // NOTE: bool -> float conversions below use full-precision float4.
+                // Using fixed4/half4 here makes the D3D11 compiler emit a bool->min16float
+                // conversion, which triggers "Incompatible min precision type" (X8000).
+
                 // --- Cascade Selection ---
+                float4 cascadeWeights;
+                float fade;
                 #if defined(SHADOWS_SPLIT_SPHERES)
                     float3 fromCenter0 = i.worldPosViewZ.xyz - unity_ShadowSplitSpheres[0].xyz;
                     float3 fromCenter1 = i.worldPosViewZ.xyz - unity_ShadowSplitSpheres[1].xyz;
@@ -489,16 +495,17 @@ Shader "Character/Disintegrate Diffuse"
                         dot(fromCenter1, fromCenter1),
                         dot(fromCenter2, fromCenter2),
                         dot(fromCenter3, fromCenter3));
-                    fixed4 cascadeWeights = fixed4(distSq < unity_ShadowSplitSqRadii);
+                    cascadeWeights = (distSq < unity_ShadowSplitSqRadii) ? float4(1,1,1,1) : float4(0,0,0,0);
                     cascadeWeights.yzw = saturate(cascadeWeights.yzw - cascadeWeights.xyz);
                     float3 fadeVec = i.worldPosViewZ.xyz - unity_ShadowFadeCenterAndType.xyz;
-                    float fade = saturate(
+                    fade = saturate(
                         sqrt(dot(fadeVec, fadeVec)) * _LightShadowData.z + _LightShadowData.w);
                 #else
-                    fixed4 zNear = fixed4(i.worldPosViewZ.wwww >= _LightSplitsNear);
-                    fixed4 zFar  = fixed4(i.worldPosViewZ.wwww <  _LightSplitsFar);
-                    fixed4 cascadeWeights = zNear * zFar;
-                    float fade = saturate(
+                    float4 viewZ = i.worldPosViewZ.wwww;
+                    float4 zNear = (viewZ >= _LightSplitsNear) ? float4(1,1,1,1) : float4(0,0,0,0);
+                    float4 zFar  = (viewZ <  _LightSplitsFar)  ? float4(1,1,1,1) : float4(0,0,0,0);
+                    cascadeWeights = zNear * zFar;
+                    fade = saturate(
                         i.worldPosViewZ.w * _LightShadowData.z + _LightShadowData.w);
                 #endif
 
@@ -511,18 +518,18 @@ Shader "Character/Disintegrate Diffuse"
                               + i.shadowCoord3 * cascadeWeights.w;
 
                 // --- Shadow Sampling ---
-                half shadowAtten;
+                float shadowAtten;
                 #if defined(SHADOWS_NATIVE)
-                    half rawShadow = tex2Dproj(
+                    float rawShadow = tex2Dproj(
                         _ShadowMapTexture,
                         float4(samplePos.xy, 0.0, samplePos.z)
                     ).r;
                     shadowAtten = _LightShadowData.x
                                 + rawShadow * (1.0 - _LightShadowData.x);
                 #else
-                    fixed rawShadow = tex2D(_ShadowMapTexture, samplePos.xy).x;
+                    float rawShadow = tex2D(_ShadowMapTexture, samplePos.xy).x;
                     shadowAtten = max(
-                        (float)(rawShadow > samplePos.z),
+                        (rawShadow > samplePos.z) ? 1.0 : 0.0,
                         _LightShadowData.x);
                 #endif
 
