@@ -134,6 +134,10 @@ public static class SoundS
 
     public static void Update()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        FMODManager.Update(); // applies a pending mute/pause once the banks have finished loading
+#endif
+
         // Replaces FMOD_Listener.Update (listener attributes incl. rigidbody velocity)
         RuntimeManager.SetListenerLocation(m_listenerGO, m_listenerGO.GetComponent<Rigidbody>());
 
